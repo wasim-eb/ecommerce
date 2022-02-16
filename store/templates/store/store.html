@@ -1,0 +1,9 @@
+<!--Inherits from the main.html file-->
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+    <h3>Store</h3>
+
+{% endblock content %}
+<!--Loads the cart image-->
+<img src="{% static 'images/cart.png' %}">
