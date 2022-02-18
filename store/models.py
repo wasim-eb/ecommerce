@@ -18,10 +18,12 @@ def __str__(self):
 # Digital will just be true or false and will let us know if this 
 # is a digital product or a physical product that needs to be shipped
 class Product(models.Model):
-	name = models.CharField(max_length=200)
-	price = models.FloatField()
-	digital = models.BooleanField(default=False,null=True, blank=True)
+    name = models.CharField(max_length=200)
+    price = models.FloatField()
+    digital = models.BooleanField(default=False,null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)  
     
+      
 def __str__(self):
         return self.name
 
