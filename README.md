@@ -39,3 +39,10 @@ Here is the result:
 
 6. ShippingAddress- Not every order will need shipping information. For orders containing physical products that need to be shipping we will need to create an instance of the shipping model to know where to send the order. Shipping will simply be a child of the order model when necessary.
 ![shipping](/readme-screenshots/shippingaddress.png)
+
+
+## Create products:
+I created a few example projects from the admin panel:
+![adminregister](/readme-screenshots/adminregister.png)
+![createproducts](/readme-screenshots/createproducts.png)
+
