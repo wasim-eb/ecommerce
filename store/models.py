@@ -27,6 +27,14 @@ class Product(models.Model):
 def __str__(self):
         return self.name
 
+@property
+def imageURL(self):
+	try:
+		url = self.image.url
+	except:
+		url = ''
+	return url
+
 # The order Item model will be connected to
 # the customer with a one to many relationship
 # (AKA ForeignKey) and will hold the status of complete (True or False)
