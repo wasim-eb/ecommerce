@@ -48,6 +48,18 @@ class Order(models.Model):
 	def __str__(self):
 		return str(self.id)
 
+	@property
+	def get_cart_total(self):
+		orderitems = self.orderitem_set.all()
+		total = sum([item.get_total for item in orderitems])
+		return total 
+
+	@property
+	def get_cart_items(self):
+		orderitems = self.orderitem_set.all()
+		total = sum([item.quantity for item in orderitems])
+		return total
+
 # This model will need a product attribute connected
 # to the product model, the order this item is connected to,
 # quantity and the date this item was added to cart.
@@ -56,6 +68,11 @@ class OrderItem(models.Model):
 	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
 	quantity = models.IntegerField(default=0, null=True, blank=True)
 	date_added = models.DateTimeField(auto_now_add=True)
+
+	@property
+	def get_total(self):
+		total = self.product.price * self.quantity
+		return total
 
 # This model will be a child to order and 
 # will only be created if at least one orderitem
