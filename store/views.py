@@ -24,28 +24,36 @@ def store(request):
 	products = Product.objects.all()
 	context = {'products':products, 'cartItems':cartItems}
 	return render(request, 'store/store.html', context)
-
+#Shows the cart items
 def cart(request):
-
+# If logged in, items are stored in the account and shows quantity beside the cart icon
 	if request.user.is_authenticated:
 		customer = request.user.customer
 		order, created = Order.objects.get_or_create(customer=customer, complete=False)
 		items = order.orderitem_set.all()
 		cartItems = order.get_cart_items
+	# If logged out, items are stored in a cookie and then shows quantity beside the cart icon
+	# 
 	else:
-		#Create empty cart for now for non-logged in user
+		#Creates an empty cart if one does not exist
 		try:
 			cart = json.loads(request.COOKIES['cart'])
 		except:
 			cart = {}
-			print('Cart', cart)
-			
+		print('Cart:', cart)
+
 		items = []
-		order = {'get_cart_total':0, 'get_cart_items':0, 'shipping':False}
+		order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
 		cartItems = order['get_cart_items']
 
 		for i in cart:
-			cartItems += cart[i]["quantity"]
+			cartItems += cart[i]['quantity']
+
+			product = Product.objects.get(id=i)
+			total = (product.price * cart[i]['quantity'])
+
+			order['get_cart_total'] += total
+			order['get_cart_items'] += cart[i]['quantity']
 
 	context = {'items':items, 'order':order, 'cartItems': cartItems}
 	return render(request, 'store/cart.html', context)

@@ -46,3 +46,12 @@ I created a few example projects from the admin panel:
 ![adminregister](/readme-screenshots/adminregister.png)
 ![createproducts](/readme-screenshots/createproducts.png)
 
+
+## Errors
+Cart does not exist error.
+
+![cart-error](/readme-screenshots/cart-error.png)
+
+One thing all first time visitors will see if we do not fix this is an error since they will have no cookie cart if this is their first time viewing our website.
+I managed to fix this by using a try/except statement and create an empty cart to work with if one does not exist.
+![cart-error-fix](/readme-screenshots/cart-error-fix.png)
