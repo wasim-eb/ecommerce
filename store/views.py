@@ -2,12 +2,9 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import json
 import datetime
+from .models import * 
+from .utils import cookieCart, cartData
 
-from .models import *
-
-# Create your views here.
-
-# Rendering products from database
 def store(request):
 
 	if request.user.is_authenticated:
@@ -16,59 +13,37 @@ def store(request):
 		items = order.orderitem_set.all()
 		cartItems = order.get_cart_items
 	else:
-		#Create empty cart for now for non-logged in user
-		items = []
-		order = {'get_cart_total':0, 'get_cart_items':0, 'shipping':False}
-		cartItems = order['get_cart_items']
+		cookieData = cookieCart(request)
+		cartItems = cookieData['cartItems']
+		order = cookieData['order']
+		items = cookieData['items']
 
 	products = Product.objects.all()
 	context = {'products':products, 'cartItems':cartItems}
 	return render(request, 'store/store.html', context)
-#Shows the cart items
+
 def cart(request):
-# If logged in, items are stored in the account and shows quantity beside the cart icon
+
 	if request.user.is_authenticated:
 		customer = request.user.customer
 		order, created = Order.objects.get_or_create(customer=customer, complete=False)
 		items = order.orderitem_set.all()
 		cartItems = order.get_cart_items
-	# If logged out, items are stored in a cookie and then shows quantity beside the cart icon
-	# 
 	else:
-		#Creates an empty cart if one does not exist
-		try:
-			cart = json.loads(request.COOKIES['cart'])
-		except:
-			cart = {}
-		print('Cart:', cart)
+		cookieData = cookieCart(request)
+		cartItems = cookieData['cartItems']
+		order = cookieData['order']
+		items = cookieData['items']
 
-		items = []
-		order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
-		cartItems = order['get_cart_items']
-
-		for i in cart:
-			cartItems += cart[i]['quantity']
-
-			product = Product.objects.get(id=i)
-			total = (product.price * cart[i]['quantity'])
-
-			order['get_cart_total'] += total
-			order['get_cart_items'] += cart[i]['quantity']
-
-	context = {'items':items, 'order':order, 'cartItems': cartItems}
+	context = {'items':items, 'order':order, 'cartItems':cartItems}
 	return render(request, 'store/cart.html', context)
-	
+
 def checkout(request):
-	if request.user.is_authenticated:
-		customer = request.user.customer
-		order, created = Order.objects.get_or_create(customer=customer, complete=False)
-		items = order.orderitem_set.all()
-		cartItems = order.get_cart_items
-	else:
-		#Create empty cart for now for non-logged in user
-		items = []
-		order = {'get_cart_total':0, 'get_cart_items':0, 'shipping':False}
-		cartItems = order['get_cart_items']
+	
+	data = cartData(request)
+	cartItems = data['cartItems']
+	order = data['order']
+	items = data['items']
 
 	context = {'items':items, 'order':order, 'cartItems':cartItems}
 	return render(request, 'store/checkout.html', context)
@@ -85,14 +60,14 @@ def updateItem(request):
 	order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
 	orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
-	#Adds or subtracts item quantity
+
 	if action == 'add':
 		orderItem.quantity = (orderItem.quantity + 1)
 	elif action == 'remove':
 		orderItem.quantity = (orderItem.quantity - 1)
 
 	orderItem.save()
-	#If quantity is below 0, the item is deleted.
+
 	if orderItem.quantity <= 0:
 		orderItem.delete()
 
@@ -107,21 +82,21 @@ def processOrder(request):
 		order, created = Order.objects.get_or_create(customer=customer, complete=False)
 		total = float(data['form']['total'])
 		order.transaction_id = transaction_id
-		#Checks if the total data that passes in is the same as the cart total,
+
 		if total == order.get_cart_total:
 			order.complete = True
 		order.save()
 
 		if order.shipping == True:
 			ShippingAddress.objects.create(
-				customer=customer,
-				order=order,
-				address=data['shipping']['address'],
-				city=data['shipping']['city'],
-				state=data['shipping']['state'],
-				zipcode=data['shipping']['zipcode'],
-				)
-
+			customer=customer,
+			order=order,
+			address=data['shipping']['address'],
+			city=data['shipping']['city'],
+			state=data['shipping']['state'],
+			zipcode=data['shipping']['zipcode'],
+			)
 	else:
 		print('User is not logged in')
+
 	return JsonResponse('Payment submitted..', safe=False)
