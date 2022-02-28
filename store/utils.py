@@ -1,5 +1,11 @@
+from django.http import HttpResponse
 import json
 from . models import *
+
+def set_session_cookie(key, val):
+	response = HttpResponse()
+	response.set_cookie(key, val)
+	return response
 
 def cookieCart(request):
 
@@ -7,7 +13,7 @@ def cookieCart(request):
 	try:
 		cart = json.loads(request.COOKIES['cart'])
 	except:
-		cart = {}
+		cart = set_session_cookie("cart", {})
 		print('CART:', cart)
 
 	items = []
@@ -28,7 +34,7 @@ def cookieCart(request):
 			item = {
 				'id':product.id,
 				'product':{'id':product.id,'name':product.name, 'price':product.price, 
-				'imageURL':product.imageURL}, 'quantity':cart[i]['quantity'],
+				'imageURL':None}, 'quantity':cart[i]['quantity'],
 				'digital':product.digital,'get_total':total,
 				}
 			items.append(item)
@@ -53,3 +59,30 @@ def cartData(request):
 		items = cookieData['items']
 
 	return {'cartItems':cartItems ,'order':order, 'items':items}
+
+def guestOrder(request, data):
+	name = data['form']['name']
+	email = data['form']['email']
+
+	cookieData = cookieCart(request)
+	items = cookieData['items']
+
+	customer, created = Customer.objects.get_or_create(
+			email=email,
+			)
+	customer.name = name
+	customer.save()
+
+	order = Order.objects.create(
+		customer=customer,
+		complete=False,
+		)
+
+	for item in items:
+		product = Product.objects.get(id=item['id'])
+		orderItem = OrderItem.objects.create(
+			product=product,
+			order=order,
+			quantity=item['quantity'],
+		)
+	return customer, order
