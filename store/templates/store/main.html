@@ -9,7 +9,8 @@
 	<script type="text/javascript">
 		var user = '{{request.user}}'
 
-			function getToken(name) {
+		debugger;
+		function getToken(name) {
 			var cookieValue = null;
 			if (document.cookie && document.cookie !== '') {
 				var cookies = document.cookie.split(';');
@@ -44,12 +45,13 @@
 
             // Return null if not found
             return null;
-}
+		}
 
 		//we set the name with "cart=" and then stringify 
 		//the Javascript object (cart), then set the domain
 		//so we have this same cookie on every page.
 		var cart = JSON.parse(getCookie('cart'))
+		console.log('Cart', cart)
 		if (cart == undefined){
 			cart = {}
 			console.log('Cart was created!')
@@ -103,5 +105,6 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 	
 	<script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/helper.js' %}"></script>
 </body>
 </html>
