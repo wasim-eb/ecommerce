@@ -23,6 +23,19 @@ I was happy with my first attempt on creating the columns for the products and I
 Here is the result: 
 ![placeholderscrnshot](/readme-screenshots/placeholderscrn.png)
 
+At one point, my code started bugging. I created the cookie method to create and save products inside a cookie, while making an order as a guest user (Not logged in). The cookie collected the information, but the cart icon was not updating the quantity visually. 
+
+Here is the ''Add to cart button''
+![addtocart](/readme-screenshots/addtocart.png)
+![cookieadd](/readme-screenshots/cookieadd.png)
+
+Here, the cart icon does not update the quantity that's being added to the cookie.
+![nocartupdate](/readme-screenshots/nocartupdate.png)
+
+I tried running the whole project locally with Virtual Studio Code and suddenly, the issue was resolved. The cookie was fulfilling its purpose and the cart was updating the quantity:
+![cartupdate](/readme-screenshots/cartupdate.png)
+
+
 ## Models:
 1. User- Built in Dango user model. An instance of this model will be created for each customer that registers with our website. This model will give us the ability to later use Djangos default authentication system without having to manually set this up ourselves.
 2. Customer - Along with a User model each customer will contain a Customer model that holds a one to one relationship to each user. (OneToOneField).
