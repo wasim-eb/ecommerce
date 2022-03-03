@@ -32,11 +32,16 @@ def cookieCart(request):
 			order['get_cart_items'] += cart[i]['quantity']
 
 			item = {
-				'id':product.id,
-				'product':{'id':product.id,'name':product.name, 'price':product.price, 
-				'imageURL':None}, 'quantity':cart[i]['quantity'],
-				'digital':product.digital,'get_total':total,
-				}
+			'id': product.id,
+			'product': {
+				'id': product.id,
+				'name': product.name,
+				'price': product.price,
+				'imageURL': f"/images/{product.image}"
+			},
+			'quantity': cart[i]['quantity'],
+			'digital': product.digital, 'get_total': total,
+			}
 			items.append(item)
 
 			if product.digital == False:
