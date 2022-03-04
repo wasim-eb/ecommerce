@@ -76,20 +76,12 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-#if 'DATABASE_URL' in os.environ:
-#    DATABASES = {
-#            'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
-#                }
-#                else:
-#                    DATABASES = {
-#                            'default': {
-#                                        'ENGINE': 'django.db.backends.sqlite3',
-#                                                    'NAME': BASE_DIR / 'db.sqlite3',
-#                                                            }
-#                                                                }
 
 DATABASES = {
-    'default': dj_database_url.parse('postgres://uvxhhmifeblatp:97b0307cfc94bbb1515f3eccb9c4cd1b67af44e44960cc9245c5c805fb670afe@ec2-176-34-105-15.eu-west-1.compute.amazonaws.com:5432/daiiif3m2p4q3e')
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # Password validation
