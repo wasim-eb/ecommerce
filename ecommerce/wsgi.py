@@ -10,11 +10,10 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
-#from whitenoise.django import DjangoWhiteNoise
 from whitenoise import WhiteNoise
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce.settings')
 
 application = get_wsgi_application()
 application = WhiteNoise(application, root="./static/")
-#application.add_files("/path/to/more/static/files", prefix="more-files/"))
+application.add_files("./static/js/")
