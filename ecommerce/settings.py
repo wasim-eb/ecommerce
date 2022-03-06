@@ -129,7 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_STORAGE = 'cloudinary_storage_storage_StaticHashedCloudinaryStorage'
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
@@ -144,5 +144,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dfpmwgi7a',
+    'API_KEY': '487992663689523',
+    'API_SECRET': 'sWiQpm3IP2mfv6gGtLpo_HUSW5k'
+}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
